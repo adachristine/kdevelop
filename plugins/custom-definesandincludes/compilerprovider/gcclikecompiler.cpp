@@ -100,13 +100,19 @@ Defines GccLikeCompiler::defines(Utils::LanguageType type, const QString& argume
     proc.setProcessChannelMode( QProcess::MergedChannels );
 
     // TODO: what about -mXXX or -target= flags, some of these change search paths/defines
-    const QStringList compilerArguments{
+    QStringList compilerArguments{
         languageOption(type),
         languageStandard(arguments, type),
         QStringLiteral("-dM"),
         QStringLiteral("-E"),
         QStringLiteral("-"),
     };
+
+    if (arguments.contains(QStringLiteral("-fshort-wchar")))
+    {
+        compilerArguments << QStringLiteral("-fshort-wchar");
+    }
+
     proc.setStandardInputFile(QProcess::nullDevice());
     proc.setProgram(path());
     proc.setArguments(compilerArguments);
